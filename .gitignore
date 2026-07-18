@@ -1,0 +1,20 @@
+# Generated social media outputs
+generated/
+output/
+*.mp4
+*.mov
+*.png
+*.jpg
+*.jpeg
+*.webp
+*.srt
+
+# Python
+__pycache__/
+*.pyc
+
+# Local files
+.DS_Store
+Thumbs.db
+.env
+*.local.json

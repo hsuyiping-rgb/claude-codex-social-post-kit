@@ -1,6 +1,16 @@
 ---
 name: claude-codex-social-post-kit
-description: Claude and Codex shared social media skill for creating Facebook, Instagram, and Reels copy packs, vertical short videos, and Facebook-compatible SRT subtitles from local photos, lesson-analysis notes, classroom screenshots, or generated illustrations. Use when the user asks for FB/IG/Reels copy, social post packages, short-video scripts, SRT subtitles, Facebook-compatible captions, or vertical Reels videos from a folder of images.
+description: >-
+  Claude and Codex shared social media skill for creating Facebook, Instagram, and Reels copy packs,
+  vertical short videos, and Facebook-compatible SRT subtitles from local photos, lesson-analysis notes,
+  classroom screenshots, or generated illustrations. Use when the user asks for FB/IG/Reels copy,
+  social post packages, short-video scripts, SRT subtitles, Facebook-compatible captions,
+  or vertical Reels videos from a folder of images.
+  中文情境同樣適用：當使用者說「幫我做這次活動的貼文」「把這段影片做成 Reels」「這批照片做成 IG 貼文」
+  「寫個 FB 貼文文案」「班級活動要發社群」「短影音腳本」「做張字卡」「幫我上 Facebook 字幕」
+  「照片串成直式短影音」，或丟一批照片／影片／課例分析檔並要求做成社群貼文時，務必使用此技能。
+  即使使用者只說「發個文」「做成 IG」而沒明講平台規格，只要目的是產出社群貼文素材，也應觸發。
+  發布動作留給使用者手動，不自動貼文。
 ---
 
 # Claude / Codex Shared Social Post Kit
@@ -15,6 +25,37 @@ Turn a local content folder into publishable social media materials:
 - Reels video assembled from local images.
 
 Prefer concrete artifacts over explanation. Read the source folder first, use the user's existing analysis files as the source of truth, and write outputs into a clearly named package folder beside the source content.
+
+## Skill Directory
+
+`$SKILL_DIR` in the examples below is this skill's own folder:
+
+- Claude Code: `C:\Users\vm\.claude\skills\claude-codex-social-post-kit`
+- Codex: `C:\Users\vm\.codex\skills\claude-codex-social-post-kit`
+
+## Bundled References and Scripts
+
+| File | Use it when |
+|------|-------------|
+| `references/copywriting.md` | 撰寫 FB／IG／Reels 文案前先讀：各平台語氣、長度、hashtag 數量與範本 |
+| `references/platform-specs.md` | 決定圖片尺寸、字數上限、影片規格前先讀 |
+| `scripts/pack.py` | 建立 `貼文包_<主題>_<YYYYMMDD>/` 資料夾骨架與發布清單範本（純標準庫） |
+| `scripts/photos_to_video.py` | 只有照片沒有影片時，把 4–10 張照片串成 30–90 秒直式相片影片（Ken Burns + 轉場 + 選用配樂，需 ffmpeg） |
+| `scripts/reels_from_images.py` | 從一個圖片資料夾產 1080x1920 Reels，含裁切模式（需 ffmpeg） |
+| `scripts/facebook_srt.py` | 產 Facebook 相容的 `.zh_TW.srt`（UTF-8 BOM + CRLF） |
+
+```bash
+python $SKILL_DIR/scripts/pack.py --topic "閱讀闖關" --platforms fb ig reels --outdir .
+python $SKILL_DIR/scripts/photos_to_video.py 圖1.jpg 圖2.jpg 圖3.jpg --out reels_相片影片.mp4 --total 45 --music bgm.mp3
+```
+
+## Guardrails for School Content
+
+學校場景不可省略的三條護欄：
+
+1. **肖像權優先**：產出任何含學生照片的內容前，先問使用者「這些照片是否已取得家長／學校授權？」並提供三條路徑：(a) 已授權直接用原照；(b) 打碼或改用背影、局部特寫；(c) 用 `draw` 技能重繪為插畫（對外公開最安全）。不確定時傾向保守。
+2. **不捏造事實**：不自動生成參加人數、得獎名次、師生評語等未提供的資訊。需要具體數字或引言時向使用者索取。
+3. **發布留給使用者**：終點是「產出貼文包 + 發布清單」。不要用瀏覽器或平台 API 代為登入、貼文、送出。
 
 ## Source Reading Order
 
@@ -55,7 +96,7 @@ Default choices:
 Example:
 
 ```powershell
-python C:\Users\vm\.codex\skills\claude-codex-social-post-kit\scripts\reels_from_images.py `
+python $SKILL_DIR\scripts\reels_from_images.py `
   --images-dir "G:\...\圖片\GPT插圖" `
   --out "G:\...\新媒體文案包_主題_20260718\reels_topic_30s.mp4" `
   --duration 30 `
@@ -81,7 +122,7 @@ Rules learned from Facebook Reels upload behavior:
 Example:
 
 ```powershell
-python C:\Users\vm\.codex\skills\claude-codex-social-post-kit\scripts\facebook_srt.py `
+python $SKILL_DIR\scripts\facebook_srt.py `
   --lines "寫作，從看見開始" "共同看見，才有共同語言" `
   --out "G:\...\utsugi_taiwanese_writing_reels_30s.zh_TW.srt" `
   --duration 30.021

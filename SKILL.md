@@ -65,6 +65,16 @@ python $SKILL_DIR/scripts/photos_to_video.py 圖1.jpg 圖2.jpg 圖3.jpg --out re
 4. If only images exist, infer a visual sequence from filenames and create cautious, source-grounded copy.
 5. Do not invent names, dates, school details, or claims not present in the source files.
 
+## Final Asset Selection
+
+Before rendering a Reels video, identify the exact final visual sequence. Do not pass a directory containing drafts, source screenshots, crops, or multiple variants directly to the video script.
+
+- For lesson-analysis decks, read the final deck or HTML outline and use one visual per slide/beat in that order.
+- Prefer an explicit vertical final set such as `drawings_vertical/slide_1.png` through `slide_N.png`.
+- Exclude files or folders named `_source`, `screenshot`, `preview`, `draft`, `v2`, `clean`, or other non-final variants unless the user explicitly selects them.
+- When a source folder contains mixed variants, prepare a dedicated `selected_final_images/` folder inside the new social package containing only the chosen images. Count its images before rendering; the count must equal the planned Reels beats and subtitle cues.
+- Keep original sources untouched. The selected-image folder is a reproducible build input and may be removed only when the user asks for final cleanup.
+
 ## Copy Package Workflow
 
 Create an output folder named like:
@@ -78,6 +88,8 @@ Recommended files:
 - `Reels_腳本.txt`
 - `素材使用建議.md`
 
+For a Reels request, also include the final `.mp4`, the final ASCII-named `.zh_TW.srt`, and a plain-text list of the selected subtitle lines in the same package.
+
 For lesson or classroom content, write in Traditional Chinese unless the user asks otherwise. Focus on observable learning facts: what students saw, said, read, revised, or exchanged. Avoid turning the post into generic praise of a teacher or a class.
 
 ## Reels Video Workflow
@@ -89,6 +101,7 @@ Default choices:
 - Output video: MP4, H.264, 1080 x 1920, 30 fps.
 - Duration: 30 seconds unless the user specifies otherwise.
 - Image timing: distribute duration evenly across all selected images.
+- Select exactly one final image per planned beat before running the script. For a 30-second, 12-beat lesson Reels, use 12 images at about 2.5 seconds each.
 - Audio: include a silent AAC track for platform compatibility.
 - If source images are horizontal, do not simply shrink them into the center with large blank areas. Use vertical crop mode so the subject fills the Reels frame.
 - For generated classroom illustrations that fade out on the left, use right-biased subject cropping.
@@ -151,6 +164,7 @@ For every final Reels video, verify:
 - Duration matches the subtitle end time.
 - Video has an AAC audio stream, even if silent.
 - A sampled preview frame shows subject-filled composition, not a small image floating in a large blank layout.
+- Selected image count, visual-beat count, and subtitle-cue count agree.
 
 For every final SRT, verify:
 
